@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors({ origin: '*' });
   app.setGlobalPrefix('api');
 
-  await app.listen(3000);
+  await app.listen(4000);
 
   if (module.hot) {
     module.hot.accept();
