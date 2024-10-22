@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "src/core/axios";
 
 type FormFields = {
+  name: string;
   username: string;
   password: string;
 };
@@ -41,7 +42,7 @@ export const SignUp = () => {
       if (response.data) {
         reset();
         rootToast.success({
-          content: "Create user success",
+          content: "Create user success. Redirecting...",
           onClose: () => {
             navigate("/");
           },
@@ -61,6 +62,24 @@ export const SignUp = () => {
         gap={usySpacing.px20}
       >
         <Typography size="gigant-1">Sign Up</Typography>
+        <Controller
+          control={control}
+          name="name"
+          rules={{
+            required: {
+              value: true,
+              message: "This field is required",
+            },
+          }}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Name"
+              hasError={Boolean(errors.name)}
+              description={errors.name?.message}
+            />
+          )}
+        />
         <Controller
           control={control}
           name="username"

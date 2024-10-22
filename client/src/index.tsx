@@ -8,6 +8,7 @@ import "@usy-ui/base/dist/styles.css";
 
 import { AuthProvider } from "./context/AuthProvider";
 import { Dashboard } from "./pages/dashboard";
+import { Profile } from "./pages/profile";
 import { SignIn } from "./pages/sign-in";
 import { SignUp } from "./pages/sign-up";
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
   {
     path: "/dashboard",

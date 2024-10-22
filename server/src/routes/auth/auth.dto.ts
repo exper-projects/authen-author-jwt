@@ -5,6 +5,7 @@ export class CreateUserDto extends PickType(UserModel, [
   'username',
   'password',
   'name',
+  'balance',
 ] as const) {}
 
 export class SignInDto extends PickType(UserModel, [

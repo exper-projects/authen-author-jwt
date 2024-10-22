@@ -1,6 +1,7 @@
 import {
   IsDate,
   IsNotEmpty,
+  IsNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -22,6 +23,9 @@ export class UserModel {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  @IsNumber()
+  balance: number;
 
   @IsString()
   storedRefreshToken?: string;

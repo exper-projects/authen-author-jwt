@@ -5,6 +5,7 @@ import {
   Flex,
   Input,
   Password,
+  rootToast,
   Typography,
   usySpacing,
 } from "@usy-ui/base";
@@ -42,15 +43,20 @@ export const SignIn = () => {
       });
 
       if (response.data) {
-        console.log(response.data);
         setAuth({
           user: response.data,
         });
         reset();
-        navigate("/dashboard");
+        navigate(
+          response.data.username === "admin" ? "/dashboard" : "/profile"
+        );
       }
-    } catch (error) {
-      console.log(error);
+    } catch ({ response: { data } }) {
+      if (data.statusCode === 404) {
+        rootToast.warning({
+          content: "User not found",
+        });
+      }
     }
   };
 

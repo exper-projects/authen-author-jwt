@@ -4,6 +4,7 @@ CREATE TABLE "User" (
     "username" VARCHAR(30) NOT NULL,
     "password" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "balance" INTEGER NOT NULL DEFAULT 0,
     "storedRefreshToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
