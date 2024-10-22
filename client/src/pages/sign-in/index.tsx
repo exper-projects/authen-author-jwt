@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import {
   Button,
   Flex,
@@ -8,6 +10,8 @@ import {
 } from "@usy-ui/base";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "src/context/AuthProvider";
+import axios from "src/core/axios";
 
 type FormFields = {
   username: string;
@@ -16,10 +20,12 @@ type FormFields = {
 
 export const SignIn = () => {
   const navigate = useNavigate();
+  const { setAuth } = useContext(AuthContext);
 
   const {
     formState: { errors },
     control,
+    reset,
     handleSubmit,
   } = useForm<FormFields>({
     defaultValues: {
@@ -28,8 +34,24 @@ export const SignIn = () => {
     },
   });
 
-  const onSubmit = (values: FormFields) => {
-    console.log(values);
+  const onSubmit = async (values: FormFields) => {
+    try {
+      const abortController = new AbortController();
+      const response = await axios.post("/auth/sign-in", values, {
+        signal: abortController.signal,
+      });
+
+      if (response.data) {
+        console.log(response.data);
+        setAuth({
+          user: response.data,
+        });
+        reset();
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

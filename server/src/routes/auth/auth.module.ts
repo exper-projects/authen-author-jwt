@@ -5,6 +5,7 @@ import { RefreshTokenStrategy } from 'src/strategies/refresh-token.strategy';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+
 @Module({
   imports: [JwtModule.register({})],
   controllers: [AuthController],

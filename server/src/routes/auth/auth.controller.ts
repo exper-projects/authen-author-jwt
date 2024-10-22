@@ -8,7 +8,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { GetUserFromRequest } from 'src/decorators/get-user-from-request';
-import { AccessTokenGuard } from 'src/guards/at.guard';
 import { RefreshTokenGuard } from 'src/guards/rt.guard';
 import { RestrictUserInterceptor } from 'src/interceptors/restrict-user.icpt';
 import { IsPublic } from 'src/metadata/public.metadata';

@@ -19,6 +19,10 @@ export class UserModel {
   @IsString()
   password: string;
 
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
   @IsString()
   storedRefreshToken?: string;
 

@@ -17,11 +17,11 @@ export const generateAtRtTokens = async ({
   const [accessToken, refreshToken] = await Promise.all([
     jwtService.signAsync(jwtPayload, {
       secret: process.env.AT_SECRET,
-      expiresIn: 60 * 15, // 15 minutes
+      expiresIn: 10, //10s
     }),
     jwtService.signAsync(jwtPayload, {
       secret: process.env.RT_SECRET,
-      expiresIn: 60 * 60 * 24 * 7, // 1 week
+      expiresIn: 60 * 60 * 24, // 1 week
     }),
   ]);
 

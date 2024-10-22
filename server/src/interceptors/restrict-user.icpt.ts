@@ -12,6 +12,14 @@ interface UserResponse {
   data: User;
 }
 
+const restrictUserData = (user: UserResponse) => ({
+  ...user,
+  password: undefined,
+  storedRefreshToken: undefined,
+  createdAt: undefined,
+  updatedAt: undefined,
+});
+
 @Injectable()
 export class RestrictUserInterceptor
   implements NestInterceptor<User, UserResponse>
@@ -21,13 +29,11 @@ export class RestrictUserInterceptor
     next: CallHandler,
   ): Observable<UserResponse> {
     return next.handle().pipe(
-      map((data) => ({
-        ...data,
-        password: undefined,
-        storedRefreshToken: undefined,
-        createdAt: undefined,
-        updatedAt: undefined,
-      })),
+      map((data) => {
+        return data.length
+          ? data.map((user) => restrictUserData(user))
+          : restrictUserData(data);
+      }),
     );
   }
 }

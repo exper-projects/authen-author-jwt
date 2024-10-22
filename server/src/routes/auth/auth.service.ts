@@ -33,6 +33,7 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+
     return createdUser;
   }
 

@@ -3,11 +3,13 @@ import {
   Flex,
   Input,
   Password,
+  rootToast,
   Typography,
   usySpacing,
 } from "@usy-ui/base";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import axios from "src/core/axios";
 
 type FormFields = {
   username: string;
@@ -20,6 +22,7 @@ export const SignUp = () => {
   const {
     formState: { errors },
     control,
+    reset,
     handleSubmit,
   } = useForm<FormFields>({
     defaultValues: {
@@ -28,8 +31,25 @@ export const SignUp = () => {
     },
   });
 
-  const onSubmit = (values: FormFields) => {
-    console.log(values);
+  const onSubmit = async (values: FormFields) => {
+    try {
+      const abortController = new AbortController();
+      const response = await axios.post("/auth/sign-up", values, {
+        signal: abortController.signal,
+      });
+
+      if (response.data) {
+        reset();
+        rootToast.success({
+          content: "Create user success",
+          onClose: () => {
+            navigate("/");
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

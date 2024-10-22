@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "@usy-ui/base/dist/styles.css";
 
+import { AuthProvider } from "./context/AuthProvider";
 import { Dashboard } from "./pages/dashboard";
 import { SignIn } from "./pages/sign-in";
 import { SignUp } from "./pages/sign-up";
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Toast />
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <Toast />
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
