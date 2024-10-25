@@ -1,11 +1,31 @@
-import { useContext, useDebugValue } from "react";
+import { useContext } from "react";
+
+import { useNavigate } from "react-router-dom";
 
 import AuthContext from "../context/AuthProvider";
 
+type OnSignInSuccessParams = {
+  user: any;
+  navigatePath;
+};
+
 const useAuth = () => {
-  const { auth } = useContext(AuthContext);
-  useDebugValue(auth, (auth) => (auth?.user ? "Logged In" : "Logged Out"));
-  return useContext(AuthContext);
+  const navigate = useNavigate();
+  const { auth, setAuth } = useContext(AuthContext);
+
+  const onSignIn = ({ user, navigatePath }: OnSignInSuccessParams) => {
+    setAuth({
+      user,
+    });
+    navigate(navigatePath);
+  };
+
+  const onSignOut = () => {
+    setAuth(null);
+    navigate("/");
+  };
+
+  return { auth, setAuth, onSignIn, onSignOut };
 };
 
 export default useAuth;

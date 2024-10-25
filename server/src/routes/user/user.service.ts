@@ -32,14 +32,13 @@ export class UserService {
    * Update user by id
    */
 
-  @Put(':id/update')
-  async updateUserById(
-    userId: string,
+  async updateUserByUsername(
+    username: string,
     payload: UpdateUserDto,
   ): Promise<UserModel> {
     const targetUser = await this.prisma.user.findUnique({
       where: {
-        id: userId,
+        username,
       },
     });
 
@@ -50,7 +49,7 @@ export class UserService {
     return await this.prisma.user.update({
       data: payload,
       where: {
-        id: userId,
+        id: targetUser.id,
       },
     });
   }

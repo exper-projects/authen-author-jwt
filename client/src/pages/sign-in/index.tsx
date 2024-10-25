@@ -1,5 +1,3 @@
-import { useContext } from "react";
-
 import {
   Button,
   Flex,
@@ -11,8 +9,8 @@ import {
 } from "@usy-ui/base";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "src/context/AuthProvider";
 import axios from "src/core/axios";
+import useAuth from "src/hooks/useAuth";
 
 type FormFields = {
   username: string;
@@ -21,7 +19,7 @@ type FormFields = {
 
 export const SignIn = () => {
   const navigate = useNavigate();
-  const { setAuth } = useContext(AuthContext);
+  const { onSignIn } = useAuth();
 
   const {
     formState: { errors },
@@ -30,8 +28,8 @@ export const SignIn = () => {
     handleSubmit,
   } = useForm<FormFields>({
     defaultValues: {
-      username: "",
-      password: "",
+      username: "admin",
+      password: "123",
     },
   });
 
@@ -43,13 +41,12 @@ export const SignIn = () => {
       });
 
       if (response.data) {
-        setAuth({
-          user: response.data,
-        });
         reset();
-        navigate(
-          response.data.username === "admin" ? "/dashboard" : "/profile"
-        );
+        onSignIn({
+          user: response.data,
+          navigatePath:
+            response.data.username === "admin" ? "/dashboard" : "/profile",
+        });
       }
     } catch ({ response: { data } }) {
       if (data.statusCode === 404) {
@@ -108,7 +105,11 @@ export const SignIn = () => {
         <Button type="submit" variant="primary" width="100%">
           Sign In
         </Button>
-        <Button variant="invisible" onClick={() => navigate("/sign-up")}>
+        <Button
+          variant="invisible"
+          width="100%"
+          onClick={() => navigate("/sign-up")}
+        >
           Go to Sign Up
         </Button>
       </Flex>

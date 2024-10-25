@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Button,
@@ -18,36 +18,9 @@ type RowType = {
   name: string;
 };
 
-const columns: TableColumnType<RowType>[] = [
-  {
-    key: "username",
-    title: "Username",
-  },
-  {
-    key: "name",
-    title: "Name",
-  },
-  {
-    key: "action-1",
-    title: "",
-    renderRow: (row) => (
-      <Button
-        variant="outline"
-        size="small"
-        noSole
-        onClick={() => {
-          console.log(row);
-        }}
-      >
-        Revoke token
-      </Button>
-    ),
-  },
-];
-
 export const Dashboard = () => {
   const navigate = useNavigate();
-  const { auth, setAuth } = useAuth();
+  const { auth, onSignOut } = useAuth();
   const [users, setUsers] = useState<UserModel[]>([]);
   const axiosPrivate = useAxiosPrivate();
 
@@ -77,16 +50,61 @@ export const Dashboard = () => {
   const handleSignOut = async () => {
     try {
       await axiosPrivate.post("/auth/sign-out");
-      setAuth(null);
-      navigate("/");
+      onSignOut();
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleRevokeRefreshToken = useCallback(
+    async (row: RowType) => {
+      try {
+        await axiosPrivate.post("/auth/revoke-refresh-token", {
+          username: row.username,
+        });
+        rootToast.success({
+          content: `Revoke refresh for user ${row.name} success`,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [axiosPrivate]
+  );
+
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  const columns: TableColumnType<RowType>[] = useMemo(
+    () => [
+      {
+        key: "username",
+        title: "Username",
+        widthProps: { width: "120px" },
+      },
+      {
+        key: "name",
+        title: "Name",
+        widthProps: { width: "180px" },
+      },
+      {
+        key: "action-1",
+        title: "",
+        renderRow: (row) => (
+          <Button
+            variant="outline"
+            size="small"
+            noSole
+            onClick={() => handleRevokeRefreshToken(row)}
+          >
+            Revoke token
+          </Button>
+        ),
+      },
+    ],
+    [handleRevokeRefreshToken]
+  );
 
   return (
     <Flex
@@ -98,7 +116,7 @@ export const Dashboard = () => {
       gap={usySpacing.px10}
     >
       <Flex justifyContent="center" gap={usySpacing.px10}>
-        <Button variant="primary" size="small" onClick={fetchUsers} noSole>
+        <Button variant="outline" size="small" onClick={fetchUsers} noSole>
           Refresh
         </Button>
         <Button variant="primary" size="small" onClick={handleSignOut} noSole>

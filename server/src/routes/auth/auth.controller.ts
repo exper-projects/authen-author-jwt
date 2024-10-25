@@ -14,6 +14,7 @@ import { IsPublic } from 'src/metadata/public.metadata';
 
 import { CreateUserDto, SignInDto } from './auth.dto';
 import { AuthService } from './auth.service';
+import { RevokeRefreshTokenBody } from './auth.types';
 
 @Controller('auth')
 export class AuthController {
@@ -65,5 +66,15 @@ export class AuthController {
     @GetUserFromRequest() user: { userId: string; refreshToken: string },
   ) {
     return this.authService.refreshToken(user.userId, user.refreshToken);
+  }
+
+  /**
+   * Revoke refresh token
+   */
+
+  @Post('revoke-refresh-token')
+  @HttpCode(HttpStatus.OK)
+  revokeRefreshToken(@Body() payload: RevokeRefreshTokenBody) {
+    return this.authService.revokeRefreshToken(payload.username);
   }
 }

@@ -146,6 +146,31 @@ export class AuthService {
   }
 
   /**
+   * Revoke refresh token
+   */
+
+  async revokeRefreshToken(username: string) {
+    const targetUser = await this.prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    if (!targetUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.prisma.user.update({
+      data: {
+        storedRefreshToken: '',
+      },
+      where: {
+        id: targetUser.id,
+      },
+    });
+  }
+
+  /**
    * Utilities
    */
 

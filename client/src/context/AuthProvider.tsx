@@ -1,4 +1,10 @@
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 import { UserModel } from "src/models/user.model";
 
@@ -11,8 +17,17 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({});
 
+const getInitialState = () => {
+  const currentUser = sessionStorage.getItem("currentUser");
+  return currentUser ? JSON.parse(currentUser) : null;
+};
+
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState<{ user: UserModel }>();
+  const [auth, setAuth] = useState<{ user: UserModel }>(getInitialState);
+
+  useEffect(() => {
+    sessionStorage.setItem("currentUser", auth ? JSON.stringify(auth) : "");
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
